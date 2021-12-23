@@ -2,6 +2,7 @@ package ba.academy.qoq.repository.entities;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 @Entity
@@ -22,8 +23,13 @@ public class MapEntity extends AbstractEntity {
     @OneToOne(mappedBy = "map", cascade = CascadeType.ALL)
     private LevelEntity level;
 
+    @OneToOne
+    @JoinColumn(name = "CURRENT_DUNGEON_ID")
+    private DungeonEntitiy currentDungeon;
+
+
     @OneToMany(mappedBy = "map")
-    public List<DungeonEntitiy> dungeons;
+    public Set<DungeonEntitiy> dungeons;
 
     @Override
     public Integer getId() {
@@ -42,11 +48,19 @@ public class MapEntity extends AbstractEntity {
         this.level = level;
     }
 
-    public List<DungeonEntitiy> getDungeons() {
+    public Set<DungeonEntitiy> getDungeons() {
         return dungeons;
     }
 
-    public void setDungeons(List<DungeonEntitiy> dungeons) {
+    public void setDungeons(Set<DungeonEntitiy> dungeons) {
         this.dungeons = dungeons;
+    }
+
+    public DungeonEntitiy getCurrentDungeon() {
+        return currentDungeon;
+    }
+
+    public void setCurrentDungeon(DungeonEntitiy currentDungeon) {
+        this.currentDungeon = currentDungeon;
     }
 }

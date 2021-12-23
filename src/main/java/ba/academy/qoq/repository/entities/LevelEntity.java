@@ -39,14 +39,6 @@ public class LevelEntity extends AbstractEntity{
         this.id = id;
     }
 
-    public GameEntitiy getGame() {
-        return game;
-    }
-
-    public void setGame(GameEntitiy game) {
-        this.game = game;
-    }
-
     public MapEntity getMap() {
         return map;
     }

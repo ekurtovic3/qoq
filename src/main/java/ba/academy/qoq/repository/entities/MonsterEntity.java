@@ -20,6 +20,8 @@ public class MonsterEntity  extends AbstractEntity {
     @Column(name = "DAMAGE")
     private Integer damage;
 
+    @Column(name = "HEALTH")
+    private Integer health;
 
     @OneToOne(mappedBy = "monster", cascade = CascadeType.ALL)
     private DungeonEntitiy dungeon;
@@ -41,4 +43,11 @@ public class MonsterEntity  extends AbstractEntity {
         this.id = id;
     }
 
+    public Integer getHealth() {
+        return health;
+    }
+
+    public void setHealth(Integer health) {
+        this.health = health;
+    }
 }

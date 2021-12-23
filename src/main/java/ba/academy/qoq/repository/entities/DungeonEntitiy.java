@@ -27,6 +27,9 @@ public class DungeonEntitiy extends AbstractEntity{
     @OneToMany(mappedBy = "dungeon")
     public List<ItemEntitiy> items;
 
+    @OneToOne(mappedBy = "currentDungeon", cascade = CascadeType.ALL)
+    private MapEntity mapEntity;
+
     @ManyToOne
     @JoinColumn(name="MAP_ID")
     public MapEntity map;

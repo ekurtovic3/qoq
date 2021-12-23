@@ -7,6 +7,7 @@ import ba.academy.qoq.repository.entities.ItemEntitiy;
 import ba.academy.qoq.repository.entities.MapEntity;
 
 import java.util.List;
+import java.util.Set;
 
 public class MapDtoTransformer implements DtoTransformer<MapEntity, MapDto> {
 
@@ -16,10 +17,9 @@ public class MapDtoTransformer implements DtoTransformer<MapEntity, MapDto> {
     public MapDto toDto(MapEntity entity) {
         MapDto mapInput = new MapDto();
         mapInput.setId(entity.getId());
-
-        final List<DungeonEntitiy> dungeons = entity.getDungeons();
+        final Set<DungeonEntitiy> dungeons = entity.getDungeons();
         mapInput.setDungeons(dungeonDtoTransformer.toDtoList(dungeons));
-
+       if(mapInput.getCurrentDungeon()!=null) mapInput.setCurrentDungeon(dungeonDtoTransformer.toDto(entity.getCurrentDungeon()));
         return  mapInput;
     }
 

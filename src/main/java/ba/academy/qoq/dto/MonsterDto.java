@@ -5,6 +5,7 @@ import java.util.List;
 public class MonsterDto {
     private Integer id;
     private Integer damage;
+    private Integer health;
 
     public Integer getId() {
         return id;
@@ -20,5 +21,13 @@ public class MonsterDto {
 
     public void setDamage(Integer damage) {
         this.damage = damage;
+    }
+
+    public Integer getHealth() {
+        return health;
+    }
+
+    public void setHealth(Integer health) {
+        this.health = health;
     }
 }

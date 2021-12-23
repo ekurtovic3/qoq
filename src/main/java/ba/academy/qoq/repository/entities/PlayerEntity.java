@@ -2,7 +2,6 @@ package ba.academy.qoq.repository.entities;
 
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(schema = "qoq", name = "PLAYER")
@@ -21,15 +20,15 @@ public class PlayerEntity extends AbstractEntity {
     private Integer id;
 
 
-    @Column(name = "HEALTH", nullable = false)
+    @Column(name = "HEALTH")
     private Integer health;
 
 
-    @Column(name = "DAMAGE", nullable = false)
+    @Column(name = "DAMAGE")
     private Integer damage;
 
 
-    @Column(name = "HEALING_POTING", nullable = false)
+    @Column(name = "HEALING_POTING")
     private Integer healingPoting;
 
     @OneToOne(mappedBy = "player", cascade = CascadeType.ALL)

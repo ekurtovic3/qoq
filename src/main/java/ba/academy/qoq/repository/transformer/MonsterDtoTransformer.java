@@ -10,12 +10,14 @@ public class MonsterDtoTransformer implements DtoTransformer<MonsterEntity, Mons
         MonsterDto monsterDto=new MonsterDto();
         monsterDto.setId(entity.getId());
         monsterDto.setDamage(entity.getDamage());
+        monsterDto.setHealth(entity.getHealth());
         return monsterDto;
     }
 
     @Override
     public MonsterEntity toEntity(MonsterDto dto, MonsterEntity entityInstance) {
         entityInstance.setDamage(dto.getDamage());
+        entityInstance.setHealth(dto.getHealth());
         return entityInstance;
     }
 

@@ -5,7 +5,7 @@ import java.util.List;
 public class MapDto {
     private Integer id;
     private List<DungeonDto> dungeons;
-
+    private DungeonDto currentDungeon;
     public Integer getId() {
         return id;
     }
@@ -20,5 +20,13 @@ public class MapDto {
 
     public void setDungeons(List<DungeonDto> dungeons) {
         this.dungeons = dungeons;
+    }
+
+    public DungeonDto getCurrentDungeon() {
+        return currentDungeon;
+    }
+
+    public void setCurrentDungeon(DungeonDto currentDungeon) {
+        this.currentDungeon = currentDungeon;
     }
 }
