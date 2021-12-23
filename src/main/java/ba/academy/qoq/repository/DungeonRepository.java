@@ -21,5 +21,12 @@ public class DungeonRepository extends Repository<DungeonEntitiy, Integer>{
         return entityManager()
                 .createQuery(query).getResultList();
     }
+    public  DungeonEntitiy findFirst() {
+        CriteriaQuery<DungeonEntitiy> query = criteriaQuery();
+        Root<DungeonEntitiy> table = query.from(DungeonEntitiy.class);
+        query.select(table);
+        return entityManager().createQuery(query).getSingleResult();
+
+    }
 }
 

@@ -6,7 +6,7 @@ import java.util.Set;
 public class DungeonDto {
     private Integer id;
     private MonsterDto monster;
-    private Set<ItemDto> items;
+    private ItemDto item;
 
 
     public Integer getId() {
@@ -25,13 +25,11 @@ public class DungeonDto {
         this.monster = monster;
     }
 
-    public Set<ItemDto> getItems() {
-        return items;
+    public ItemDto getItem() {
+        return item;
     }
 
-    public void setItems(Set<ItemDto> items) {
-        this.items = items;
+    public void setItem(ItemDto item) {
+        this.item = item;
     }
-
-
 }

@@ -24,7 +24,8 @@ public class DungeonEntitiy extends AbstractEntity{
     @JoinColumn(name = "MONSTER_ID")
     private MonsterEntity monster;
 
-    @OneToOne(mappedBy = "dungeon")
+    @OneToOne
+    @JoinColumn(name = "ITEM_ID")
     public ItemEntitiy item;
 
     @OneToOne(mappedBy = "currentDungeon", cascade = CascadeType.ALL)

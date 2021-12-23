@@ -18,9 +18,8 @@ public class ItemEntitiy  extends AbstractEntity {
     @Column(name = "ID")
     private Integer id;
 
-    @OneToOne
-    @JoinColumn(name="DUNGEON_ID")
-    public DungeonEntitiy dungeon;
+    @OneToOne(mappedBy = "item", cascade = CascadeType.ALL)
+    private DungeonEntitiy dungeon;
 
     @Override
     public Integer getId() {

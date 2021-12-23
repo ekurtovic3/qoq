@@ -32,7 +32,8 @@ public class GameResource {
     public Response move(@PathParam("id") int id) {
 
         DungeonDto dungeonDto = gameSerivce.move(id);
-      //  String massage = "{\"Poruka\":\"ASDDSA\"}";
+        String massage = "{\"Poruka\":\"Presli ste u iduci dungeon\"";
+        if(dungeonDto.getMonster()!=null) massage+=",\n\"Monster\":\"Monster\"}";
         return Response.status(200).entity(dungeonDto).build();
     }
 

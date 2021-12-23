@@ -18,17 +18,26 @@ public class DungeonDtoTransformer implements DtoTransformer<DungeonEntitiy, Dun
     public DungeonDto toDto(DungeonEntitiy entity) {
         DungeonDto dungeonInput = new DungeonDto();
         dungeonInput.setId(entity.getId());
+
         if (entity.getMonster() != null) dungeonInput.setMonster(monsterDtoTransformer.toDto(entity.getMonster()));
         ItemEntitiy item = entity.getItem();
-        if (item instanceof PowerUpEnttiy) {
-            PowerUpDto powerUpDto = new PowerUpDto();
-            powerUpDto.setDamage(((PowerUpEnttiy) item).getDamage());
-        } else if (item instanceof HealerEntity) {
-            HelaerDto helaerDto = new HelaerDto();
-            helaerDto.setHealth(((HealerEntity) item).getHealth());
 
-        } else {
+        if (item instanceof PowerUpEnttiy && item!=null) {
+            PowerUpDto powerUpDto = new PowerUpDto();
+            powerUpDto.setId(entity.getItem().getId());
+            powerUpDto.setDamage(((PowerUpEnttiy) item).getDamage());
+            dungeonInput.setItem(powerUpDto);
+        } else if (item instanceof HealerEntity  && item!=null) {
+            HelaerDto helaerDto = new HelaerDto();
+            helaerDto.setId(entity.getItem().getId());
+            helaerDto.setHealth(((HealerEntity) item).getHealth());
+            dungeonInput.setItem(helaerDto);
+
+        } else if(item!=null) {
             QoqDto qoqDto = new QoqDto();
+            qoqDto.setId(entity.getItem().getId());
+            dungeonInput.setItem(qoqDto);
+
         }
         return dungeonInput;
     }
