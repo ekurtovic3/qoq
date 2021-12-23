@@ -42,4 +42,6 @@ public class PowerUpEnttiy extends ItemEntitiy {
     public void setDamage(Integer damage) {
         this.damage = damage;
     }
+
+
 }
