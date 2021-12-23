@@ -24,8 +24,8 @@ public class DungeonEntitiy extends AbstractEntity{
     @JoinColumn(name = "MONSTER_ID")
     private MonsterEntity monster;
 
-    @OneToMany(mappedBy = "dungeon")
-    public List<ItemEntitiy> items;
+    @OneToOne(mappedBy = "dungeon")
+    public ItemEntitiy item;
 
     @OneToOne(mappedBy = "currentDungeon", cascade = CascadeType.ALL)
     private MapEntity mapEntity;
@@ -39,12 +39,12 @@ public class DungeonEntitiy extends AbstractEntity{
         return id;
     }
 
-    public List<ItemEntitiy> getItems() {
-        return items;
+    public ItemEntitiy getItem() {
+        return item;
     }
 
-    public void setItems(List<ItemEntitiy> items) {
-        this.items = items;
+    public void setItem(ItemEntitiy item) {
+        this.item = item;
     }
 
     public MapEntity getMap() {

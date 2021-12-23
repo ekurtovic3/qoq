@@ -12,37 +12,27 @@ import java.util.*;
 public class DungeonDtoTransformer implements DtoTransformer<DungeonEntitiy, DungeonDto> {
 
     private ItemDtoTransformer itemDtoTransformer = new ItemDtoTransformer();
-    private MonsterDtoTransformer monsterDtoTransformer= new MonsterDtoTransformer();
+    private MonsterDtoTransformer monsterDtoTransformer = new MonsterDtoTransformer();
 
     @Override
     public DungeonDto toDto(DungeonEntitiy entity) {
         DungeonDto dungeonInput = new DungeonDto();
         dungeonInput.setId(entity.getId());
-       if(entity.getMonster()!=null) dungeonInput.setMonster(monsterDtoTransformer.toDto(entity.getMonster()));
-        final Set<ItemDto> items = new HashSet<>();
-//      if(dungeonInput.getMonster()!=null) dungeonInput.setMonster(monsterDtoTransformer.toDto(entity.getMonster()));
-//
-//        for (ItemEntitiy itemEntity : entity.getItems()) {
-//            if (itemEntity instanceof PowerUpEnttiy) {
-//                PowerUpDto powerUpDto = new PowerUpDto();
-//                powerUpDto.setDamage(((PowerUpEnttiy) itemEntity).getDamage());
-//                items.add(powerUpDto);
-//
-//            } else if (itemEntity instanceof HealerEntity) {
-//                HelaerDto helaerDto = new HelaerDto();
-//                helaerDto.setHealth(((HealerEntity) itemEntity).getHealth());
-//                items.add(helaerDto);
-//            } else {
-//                QoqDto qoqDto = new QoqDto();
-//                items.add(qoqDto);
-//            }
-//            if(items!=null && !items.isEmpty())
-//                dungeonInput.setItems(items);
-//
-//        }
+        if (entity.getMonster() != null) dungeonInput.setMonster(monsterDtoTransformer.toDto(entity.getMonster()));
+        ItemEntitiy item = entity.getItem();
+        if (item instanceof PowerUpEnttiy) {
+            PowerUpDto powerUpDto = new PowerUpDto();
+            powerUpDto.setDamage(((PowerUpEnttiy) item).getDamage());
+        } else if (item instanceof HealerEntity) {
+            HelaerDto helaerDto = new HelaerDto();
+            helaerDto.setHealth(((HealerEntity) item).getHealth());
 
+        } else {
+            QoqDto qoqDto = new QoqDto();
+        }
         return dungeonInput;
     }
+
     @Override
     public DungeonEntitiy toEntity(DungeonDto dto, DungeonEntitiy entityInstance) {
         entityInstance.setId(dto.getId());

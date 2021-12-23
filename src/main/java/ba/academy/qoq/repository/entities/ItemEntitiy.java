@@ -18,7 +18,7 @@ public class ItemEntitiy  extends AbstractEntity {
     @Column(name = "ID")
     private Integer id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name="DUNGEON_ID")
     public DungeonEntitiy dungeon;
 

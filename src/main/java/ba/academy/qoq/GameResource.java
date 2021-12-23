@@ -1,14 +1,12 @@
 package ba.academy.qoq;
 
+import ba.academy.qoq.dto.DungeonDto;
 import ba.academy.qoq.dto.GameDto;
 import ba.academy.qoq.dto.WeightFacotr;
 import ba.academy.qoq.services.GameSerivce;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
 @Path("/game")
@@ -31,10 +29,11 @@ public class GameResource {
     @Path("/{id}/move")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces(value = MediaType.APPLICATION_JSON)
-    public Response move() {
+    public Response move(@PathParam("id") int id) {
 
-
-        return Response.status(Response.Status.OK).build();
+        DungeonDto dungeonDto = gameSerivce.move(id);
+      //  String massage = "{\"Poruka\":\"ASDDSA\"}";
+        return Response.status(200).entity(dungeonDto).build();
     }
 
     @POST

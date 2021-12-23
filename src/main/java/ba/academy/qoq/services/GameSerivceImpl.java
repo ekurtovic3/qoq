@@ -9,8 +9,10 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.logging.Level;
 
 @ApplicationScoped
 @Transactional
@@ -21,7 +23,7 @@ public class GameSerivceImpl implements GameSerivce {
     final private DungeonDtoTransformer dungeonDtoTransformer = new DungeonDtoTransformer();
     final private PlayerDtoTransformer playerDtoTransformer = new PlayerDtoTransformer();
     final private LevelDtoTransformer levelDtoTransformer = new LevelDtoTransformer();
-
+    final private MapDtoTransformer mapDtoTransformer= new MapDtoTransformer();
 
     @Inject
     GameRepository gameRepository;
@@ -43,8 +45,6 @@ public class GameSerivceImpl implements GameSerivce {
 
         Random rand = new Random();
         double double_random=rand.nextDouble();
-
-
         PlayerEntity player = generatePlayer();
         MonsterEntity monsterEntity = generateMonster(weightFacotr);
         MapEntity mapEntity = new MapEntity();
@@ -53,6 +53,7 @@ public class GameSerivceImpl implements GameSerivce {
         setQoq(dungeons);
 
         mapEntity.setDungeons(dungeons);
+
         mapRepository.persist(mapEntity);
 
         //Level
@@ -72,6 +73,19 @@ public class GameSerivceImpl implements GameSerivce {
         itemRepository.persist(itemEntitiy);
 
         return gameDto;
+    }
+
+    @Override
+    public DungeonDto move(int id){
+        GameEntitiy gameEntitiy=gameRepository.findBy(id);
+        LevelEntity levelEntity=levelRepository.findBy(gameEntitiy.getLevel().getId());
+        MapEntity mapEntity=mapRepository.findById(levelEntity.getMap().getId());
+        int currentDungeonId= mapEntity.getCurrentDungeon().getId();
+
+        if(mapEntity.getCurrentDungeon().getId()==null) return null;
+        mapEntity.setCurrentDungeon(dungeonRepository.findById(currentDungeonId+1));
+        mapRepository.flush();
+        return   dungeonDtoTransformer.toDto(mapEntity.getCurrentDungeon()) ;
     }
 
     private void setQoq(Set<DungeonEntitiy> dungeons) {
@@ -143,7 +157,7 @@ public class GameSerivceImpl implements GameSerivce {
 
             }
         }
-
+        map.setCurrentDungeon(dungeonEntitiyList.stream().findFirst().get());
         return dungeonEntitiyList;
     }
 
