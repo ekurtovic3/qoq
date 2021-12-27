@@ -47,8 +47,8 @@ public class GameResource {
 
         int winer = gameSerivce.fight(id);
         String massage=null;
-        if(winer==0) massage = "{\"Win\":\"Player\"}";
-        if(winer==1) massage = "{\"Win\":\"Moster\"}";
+        if(winer==0) massage = "{\"END\":\"You win\"}";
+        if(winer==1) massage = "{\"END\":\"Moster win, GAME OVER\"}";
         return Response.status(Response.Status.OK).entity(massage).build();
     }
 
@@ -74,7 +74,8 @@ public class GameResource {
     @Path("/{id}/heal")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces(value = MediaType.APPLICATION_JSON)
-    public Response heal() {
-        return Response.status(Response.Status.OK).build();
+    public Response heal(@PathParam("id") int id) {
+        PlayerDto playerDto = gameSerivce.heal(id);
+        return Response.status(Response.Status.OK).entity(playerDto).build();
     }
 }
