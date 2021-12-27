@@ -1,10 +1,7 @@
 package ba.academy.qoq;
 
-import ba.academy.qoq.dto.DungeonDto;
-import ba.academy.qoq.dto.GameDto;
-import ba.academy.qoq.dto.WeightFacotr;
+import ba.academy.qoq.dto.*;
 import ba.academy.qoq.services.GameSerivce;
-
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -33,27 +30,43 @@ public class GameResource {
 
         DungeonDto dungeonDto = gameSerivce.move(id);
         String massage = "{\"Poruka\":\"Presli ste u iduci dungeon\"";
-        if(dungeonDto.getMonster()!=null) massage+=",\n\"Monster\":\"Monster\"}";
-        return Response.status(200).entity(dungeonDto).build();
+        if(dungeonDto.getMonster()!=null) massage+=",\n\"Monster\":\"Ovdje se nalazi cudoviste.\"";
+        if(dungeonDto.getItem() instanceof HelaerDto) massage+=",\n\"Healer\":\"U ovoj sobi se nalazi healer.\"";
+        if(dungeonDto.getItem() instanceof PowerUpDto) massage+=",\n\"PowerUp\":\"U ovoj se nalazi power up.\"";
+        if(dungeonDto.getItem() instanceof QoqDto) massage+=",\n\"PowerUp\":\"U ovoj se nalazi QOQ\"";
+
+        massage+="}";
+        return Response.status(200).entity(massage).build();
     }
 
     @POST
     @Path("/{id}/fight")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces(value = MediaType.APPLICATION_JSON)
-    public Response fight() {
+    public Response fight(@PathParam("id") int id) {
 
-
-        return Response.status(Response.Status.OK).build();
+        int winer = gameSerivce.fight(id);
+        String massage=null;
+        if(winer==0) massage = "{\"Win\":\"Player\"}";
+        if(winer==1) massage = "{\"Win\":\"Moster\"}";
+        return Response.status(Response.Status.OK).entity(massage).build();
     }
 
     @POST
     @Path("/{id}/flee")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces(value = MediaType.APPLICATION_JSON)
-    public Response flee() {
+    public Response flee(@PathParam("id") int id) {
 
 
+        DungeonDto dungeonDto = gameSerivce.flee(id);
+        String massage = "{\"Poruka\":\"Presli ste u iduci dungeon\"";
+        if(dungeonDto.getMonster()!=null) massage+=",\n\"Monster\":\"Ovdje se nalazi cudoviste.\"";
+        if(dungeonDto.getItem() instanceof HelaerDto) massage+=",\n\"Healer\":\"U ovoj sobi se nalazi healer.\"";
+        if(dungeonDto.getItem() instanceof PowerUpDto) massage+=",\n\"PowerUp\":\"U ovoj se nalazi power up.\"";
+        if(dungeonDto.getItem() instanceof QoqDto) massage+=",\n\"PowerUp\":\"U ovoj se nalazi QOQ\"";
+
+        massage+="}";
         return Response.status(Response.Status.OK).build();
     }
 
@@ -62,8 +75,6 @@ public class GameResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces(value = MediaType.APPLICATION_JSON)
     public Response heal() {
-
-
         return Response.status(Response.Status.OK).build();
     }
 }

@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 @ApplicationScoped
 @Transactional
@@ -77,6 +78,53 @@ public class GameSerivceImpl implements GameSerivce {
         return dungeonDtoTransformer.toDto(mapEntity.getCurrentDungeon());
     }
 
+    @Override
+    public int fight(int id)
+    {
+        int monsterHealth=0;
+        GameEntitiy gameEntitiy = gameRepository.findBy(id);
+        LevelEntity levelEntity = levelRepository.findBy(gameEntitiy.getLevel().getId());
+        MapEntity mapEntity = mapRepository.findById(levelEntity.getMap().getId());
+        final int currentDungeonId = mapEntity.getCurrentDungeon().getId();
+        DungeonEntitiy dungeonEntitiy=dungeonRepository.findById(currentDungeonId);
+        PlayerEntity playerEntity=playerRepository.findBy(gameEntitiy.getPlayer().getId());
+        int playerHealth= playerEntity.getHealth();
+
+        MonsterEntity monsterEntity= monsterRepository.findById(dungeonEntitiy.getMonster().getId());
+        if(monsterEntity!=null)
+        monsterHealth=monsterEntity.getHealth();
+        while(playerHealth>0 && monsterHealth>0)
+        {
+            monsterHealth = monsterHealth-playerEntity.getDamage()* (int) Math.floor(Math.random()*(6-0));//ThreadLocalRandom.current().nextInt(0, 6)/5;
+            playerHealth = playerHealth-monsterEntity.getDamage()*(int) Math.floor(Math.random()*(6-0));//ThreadLocalRandom.current().nextInt(0, 6)/5;
+
+        }
+        System.out.println("MONSTER HEALTH:"+monsterHealth);
+        System.out.println("PLAYER HEALTH:"+playerHealth);
+
+        if(monsterHealth>=0) return 1;
+        if(playerHealth>=0 ) return 0;
+        return 3;
+    }
+
+    @Override
+    public DungeonDto flee(int id)
+    {
+        GameEntitiy gameEntitiy = gameRepository.findBy(id);
+        PlayerEntity playerEntity=playerRepository.findBy(gameEntitiy.getPlayer().getId());
+        LevelEntity levelEntity = levelRepository.findBy(gameEntitiy.getLevel().getId());
+        MapEntity mapEntity = mapRepository.findById(levelEntity.getMap().getId());
+        int currentDungeonId = mapEntity.getCurrentDungeon().getId();
+        //TODO: KAD DODES DO KRAJA
+        if (mapEntity.getCurrentDungeon() == null) return null;
+        if(mapEntity.getCurrentDungeon().getMonster()==null) return null;
+        mapEntity.setCurrentDungeon(dungeonRepository.findById(currentDungeonId + 1));
+        mapRepository.flush();
+        final int playerHeal= playerEntity.getHealth();
+        playerEntity.setHealth(playerHeal-10);
+        return dungeonDtoTransformer.toDto(mapEntity.getCurrentDungeon());
+
+    }
     private void setQoq(Set<DungeonEntitiy> dungeons) {
         int size = dungeons.size();
         QoqEntity qoq = new QoqEntity();
