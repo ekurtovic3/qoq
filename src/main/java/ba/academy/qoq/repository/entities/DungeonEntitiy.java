@@ -35,6 +35,9 @@ public class DungeonEntitiy extends AbstractEntity{
     @JoinColumn(name="MAP_ID")
     public MapEntity map;
 
+    @Column(name = "ORDINAL_NUMBER")
+    private Integer ordinalNumber;
+
     @Override
     public Integer getId() {
         return id;
@@ -50,6 +53,14 @@ public class DungeonEntitiy extends AbstractEntity{
 
     public MapEntity getMap() {
         return map;
+    }
+
+    public Integer getOrdinalNumber() {
+        return ordinalNumber;
+    }
+
+    public void setOrdinalNumber(Integer ordinalNumber) {
+        this.ordinalNumber = ordinalNumber;
     }
 
     public void setMap(MapEntity map) {

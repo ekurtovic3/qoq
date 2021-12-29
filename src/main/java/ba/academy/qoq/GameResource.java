@@ -27,15 +27,8 @@ public class GameResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces(value = MediaType.APPLICATION_JSON)
     public Response move(@PathParam("id") int id) {
-
         DungeonDto dungeonDto = gameSerivce.move(id);
-        String massage = "{\"Poruka\":\"Presli ste u iduci dungeon\"";
-        if(dungeonDto.getMonster()!=null) massage+=",\n\"Monster\":\"Ovdje se nalazi cudoviste.\"";
-        if(dungeonDto.getItem() instanceof HelaerDto) massage+=",\n\"Healer\":\"U ovoj sobi se nalazi healer.\"";
-        if(dungeonDto.getItem() instanceof PowerUpDto) massage+=",\n\"PowerUp\":\"U ovoj se nalazi power up.\"";
-        if(dungeonDto.getItem() instanceof QoqDto) massage+=",\n\"PowerUp\":\"U ovoj se nalazi QOQ\"";
-
-        massage+="}";
+        String massage=massageMove(dungeonDto);
         return Response.status(200).entity(massage).build();
     }
 
@@ -47,8 +40,8 @@ public class GameResource {
 
         int winer = gameSerivce.fight(id);
         String massage=null;
-        if(winer==0) massage = "{\"END\":\"You win\"}";
-        if(winer==1) massage = "{\"END\":\"Moster win, GAME OVER\"}";
+        if(winer==0) massage = "{\"FIGHT\":\"You win fight\"}";
+        if(winer==1) massage = "{\"FIGHT\":\"Moster win, GAME OVER\"}";
         return Response.status(Response.Status.OK).entity(massage).build();
     }
 
@@ -57,17 +50,11 @@ public class GameResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces(value = MediaType.APPLICATION_JSON)
     public Response flee(@PathParam("id") int id) {
-
-
+        String massage="";
         DungeonDto dungeonDto = gameSerivce.flee(id);
-        String massage = "{\"Poruka\":\"Presli ste u iduci dungeon\"";
-        if(dungeonDto.getMonster()!=null) massage+=",\n\"Monster\":\"Ovdje se nalazi cudoviste.\"";
-        if(dungeonDto.getItem() instanceof HelaerDto) massage+=",\n\"Healer\":\"U ovoj sobi se nalazi healer.\"";
-        if(dungeonDto.getItem() instanceof PowerUpDto) massage+=",\n\"PowerUp\":\"U ovoj se nalazi power up.\"";
-        if(dungeonDto.getItem() instanceof QoqDto) massage+=",\n\"PowerUp\":\"U ovoj se nalazi QOQ\"";
-
-        massage+="}";
-        return Response.status(Response.Status.OK).build();
+        if(dungeonDto==null) return Response.status(Response.Status.OK).entity("{\"Game\":\"GAME OVER\"}").build();
+        massage = massageFlee(dungeonDto);
+       return Response.status(Response.Status.OK).entity(massage).build();
     }
 
     @POST
@@ -77,5 +64,27 @@ public class GameResource {
     public Response heal(@PathParam("id") int id) {
         PlayerDto playerDto = gameSerivce.heal(id);
         return Response.status(Response.Status.OK).entity(playerDto).build();
+    }
+
+    private String massageMove(DungeonDto dungeonDto){
+        String massage = "{\"Massage\":\"You've moved on to the next dungeon\"";
+        if( dungeonDto.getMonster()!=null) massage+=",\n\"Monster\":\"There is a monster in this dungeon\"";
+        if( dungeonDto.getItem() instanceof HelaerDto && dungeonDto.getMonster()==null) massage+=",\n\"Healer\":\"You picked up the healer\"";
+        if(dungeonDto.getItem() instanceof PowerUpDto && dungeonDto.getMonster()==null) massage+=",\n\"PowerUp\":\"You picked up powe up.\"";
+        massage+="}";
+        if( dungeonDto.getItem() instanceof QoqDto && dungeonDto.getMonster()==null) massage="{\"Game\":\"QOQ-YOU WIN\"}";
+        if(dungeonDto.getId()==0) massage="{\"END\":\"You have reached the end of the dungeons-GAME OVER\"}";
+        return massage;
+    }
+    private String massageFlee(DungeonDto dungeonDto){
+        String massage = "{\"Massage\":\"You've moved on to the next dungeon\"";
+        if( dungeonDto.getMonster()!=null) massage+=",\n\"Monster\":\"There is a monster in this dungeon\"";
+        if( dungeonDto.getItem() instanceof HelaerDto && dungeonDto.getMonster()==null) massage+=",\n\"Healer\":\"You picked up the healer\"";
+        if(dungeonDto.getItem() instanceof PowerUpDto && dungeonDto.getMonster()==null) massage+=",\n\"PowerUp\":\"You picked up powe up.\"";
+        massage+="}";
+        if( dungeonDto.getItem() instanceof QoqDto && dungeonDto.getMonster()==null) massage="{\"Game\":\"QOQ-YOU WIN\"}";
+        if(dungeonDto.getId()==0) massage="{\"END\":\"You have reached the end of the dungeons-GAME OVER\"}";
+        return massage;
+
     }
 }

@@ -27,6 +27,8 @@ public class MapEntity extends AbstractEntity {
     @JoinColumn(name = "CURRENT_DUNGEON_ID")
     private DungeonEntitiy currentDungeon;
 
+    @Column(name = "NUMBER_OF_DUNGEONS")
+    private Integer numberOfDungeons;
 
     @OneToMany(mappedBy = "map")
     public Set<DungeonEntitiy> dungeons;
@@ -58,6 +60,14 @@ public class MapEntity extends AbstractEntity {
 
     public DungeonEntitiy getCurrentDungeon() {
         return currentDungeon;
+    }
+
+    public Integer getNumberOfDungeons() {
+        return numberOfDungeons;
+    }
+
+    public void setNumberOfDungeons(Integer numberOfDungeons) {
+        this.numberOfDungeons = numberOfDungeons;
     }
 
     public void setCurrentDungeon(DungeonEntitiy currentDungeon) {
