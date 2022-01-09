@@ -78,7 +78,7 @@ public class GameSerivceImpl implements GameSerivce {
     }
 
     @Override
-    public DungeonDto move(int id) {
+    public GameDto move(int id) {
         GameEntitiy gameEntitiy = gameRepository.findBy(id);
         LevelEntity levelEntity = levelRepository.findBy(gameEntitiy.getLevel().getId());
         MapEntity mapEntity = mapRepository.findById(levelEntity.getMap().getId());
@@ -87,7 +87,7 @@ public class GameSerivceImpl implements GameSerivce {
         DungeonEntitiy currentDungeon = mapEntity.getCurrentDungeon();
         if(currentDungeon.getOrdinalNumber()==mapEntity.getNumberOfDungeons()) {
             newDungeon.setId(0);
-            return dungeonDtoTransformer.toDto(newDungeon);
+            return gameDtoTransformer.toDto(gameEntitiy);
         }
         else  {
             newDungeon=dungeonRepository.findById(currentDungeon.getId() + 1);
@@ -98,7 +98,7 @@ public class GameSerivceImpl implements GameSerivce {
         if (newDungeon.getMonster() == null && newDungeon.getItem() != null)
             collect(newDungeon, gameEntitiy);
 
-        return dungeonDtoTransformer.toDto(mapEntity.getCurrentDungeon());
+        return gameDtoTransformer.toDto(gameEntitiy);
     }
 
     private void collect(DungeonEntitiy dungeonEntitiy, GameEntitiy gameEntitiy) {
@@ -261,7 +261,9 @@ public class GameSerivceImpl implements GameSerivce {
         Set<DungeonEntitiy> dungeonEntitiyList = new HashSet<>();
         if (weightFacotr.equals(WeightFacotr.EASY)) {
             for (int i = 0; i < 5; i++) {
-                dungeonEntitiyList.add(generateDungeon(map, i));
+               DungeonEntitiy dungeonEntitiy=generateDungeon(map, i);
+               if(i==0) map.setCurrentDungeon(dungeonEntitiy);
+                dungeonEntitiyList.add(dungeonEntitiy);
 
             }
 

@@ -22,7 +22,6 @@ public class MapDtoTransformer implements DtoTransformer<MapEntity, MapDto> {
        if(mapInput.getCurrentDungeon()!=null) mapInput.setCurrentDungeon(dungeonDtoTransformer.toDto(entity.getCurrentDungeon()));
         return  mapInput;
     }
-
     @Override
     public MapEntity toEntity(MapDto dto, MapEntity entityInstance) {
         entityInstance.setId(dto.getId());

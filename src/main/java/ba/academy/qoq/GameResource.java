@@ -27,9 +27,9 @@ public class GameResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces(value = MediaType.APPLICATION_JSON)
     public Response move(@PathParam("id") int id) {
-        DungeonDto dungeonDto = gameSerivce.move(id);
-        String massage=massageMove(dungeonDto);
-        return Response.status(200).entity(massage).build();
+        GameDto gameDto = gameSerivce.move(id);
+       // String massage=massageMove(dungeonDto);
+        return Response.status(200).entity(gameDto).build();
     }
 
     @POST
