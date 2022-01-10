@@ -116,7 +116,7 @@ public class GameSerivceImpl implements GameSerivce {
     }
 
     @Override
-    public int fight(int id) {
+    public GameDto fight(int id) {
         int monsterHealth = 0;
         GameEntitiy gameEntitiy = gameRepository.findBy(id);
         LevelEntity levelEntity = levelRepository.findBy(gameEntitiy.getLevel().getId());
@@ -137,38 +137,37 @@ public class GameSerivceImpl implements GameSerivce {
             playerEntity.setHealth(playerHealth);
             collect(dungeonEntitiy, gameEntitiy);
             dungeonEntitiy.setMonster(null);
-            return 0;
+            //return 0;
         }
-        if (monsterHealth >= 0) return 1;
-
-        return 3;
+        else if (monsterHealth >= 0) playerEntity.setHealth(0);;
+        playerRepository.persist(playerEntity);
+       // gameRepository.persist(gameEntitiy);
+        return gameDtoTransformer.toDto(gameEntitiy);
     }
 
 
     @Override
-    public DungeonDto flee(int id) {
+    public GameDto flee(int id) {
         GameEntitiy gameEntitiy = gameRepository.findBy(id);
         PlayerEntity playerEntity = playerRepository.findById(gameEntitiy.getPlayer().getId());
         LevelEntity levelEntity = levelRepository.findBy(gameEntitiy.getLevel().getId());
         MapEntity mapEntity = mapRepository.findById(levelEntity.getMap().getId());
-
         DungeonEntitiy newDungeon=new DungeonEntitiy();
-
         DungeonEntitiy currentDungeon = mapEntity.getCurrentDungeon();
         if(currentDungeon.getOrdinalNumber()==mapEntity.getNumberOfDungeons()) {
             newDungeon.setId(0);
-            return dungeonDtoTransformer.toDto(newDungeon);
+            return gameDtoTransformer.toDto(gameEntitiy);
         }
         else  {
             newDungeon=dungeonRepository.findById(currentDungeon.getId() + 1);
             mapEntity.setCurrentDungeon(newDungeon);
             mapRepository.flush();
         }
-
         final int playerHeal = playerEntity.getHealth();
         playerEntity.setHealth(playerHeal - 10);
         if (playerHeal - 10 <= 0) return null;
-        return dungeonDtoTransformer.toDto(mapEntity.getCurrentDungeon());
+        return gameDtoTransformer.toDto(gameEntitiy);
+
 
 
     }
@@ -269,15 +268,17 @@ public class GameSerivceImpl implements GameSerivce {
 
         } else if (weightFacotr.equals(WeightFacotr.MEDIUM)) {
             for (int i = 0; i < 10; i++) {
-                dungeonEntitiyList.add(generateDungeon(map, i));
-
+                DungeonEntitiy dungeonEntitiy=generateDungeon(map, i);
+                if(i==0) map.setCurrentDungeon(dungeonEntitiy);
+                dungeonEntitiyList.add(dungeonEntitiy);
             }
 
 
         } else {
             for (int i = 0; i < 15; i++) {
-                dungeonEntitiyList.add(generateDungeon(map, i));
-
+                DungeonEntitiy dungeonEntitiy=generateDungeon(map, i);
+                if(i==0) map.setCurrentDungeon(dungeonEntitiy);
+                dungeonEntitiyList.add(dungeonEntitiy);
             }
         }
         map.setCurrentDungeon(dungeonEntitiyList.stream().findFirst().get());

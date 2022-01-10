@@ -38,11 +38,11 @@ public class GameResource {
     @Produces(value = MediaType.APPLICATION_JSON)
     public Response fight(@PathParam("id") int id) {
 
-        int winer = gameSerivce.fight(id);
-        String massage=null;
+        GameDto winer = gameSerivce.fight(id);
+        /*String massage=null;
         if(winer==0) massage = "{\"FIGHT\":\"You win fight\"}";
-        if(winer==1) massage = "{\"FIGHT\":\"Moster win, GAME OVER\"}";
-        return Response.status(Response.Status.OK).entity(massage).build();
+        if(winer==1) massage = "{\"FIGHT\":\"Moster win, GAME OVER\"}";*/
+        return Response.status(Response.Status.OK).entity(winer).build();
     }
 
     @POST
@@ -50,11 +50,11 @@ public class GameResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces(value = MediaType.APPLICATION_JSON)
     public Response flee(@PathParam("id") int id) {
-        String massage="";
-        DungeonDto dungeonDto = gameSerivce.flee(id);
-        if(dungeonDto==null) return Response.status(Response.Status.OK).entity("{\"Game\":\"GAME OVER\"}").build();
-        massage = massageFlee(dungeonDto);
-       return Response.status(Response.Status.OK).entity(massage).build();
+        //String massage="";
+       GameDto gameDto = gameSerivce.flee(id);
+       // if(dungeonDto==null) return Response.status(Response.Status.OK).entity("{\"Game\":\"GAME OVER\"}").build();
+       // massage = massageFlee(dungeonDto);
+       return Response.status(Response.Status.OK).entity(gameDto).build();
     }
 
     @POST
