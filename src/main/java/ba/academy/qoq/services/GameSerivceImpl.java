@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 @Transactional
@@ -83,15 +84,25 @@ public class GameSerivceImpl implements GameSerivce {
         LevelEntity levelEntity = levelRepository.findBy(gameEntitiy.getLevel().getId());
         MapEntity mapEntity = mapRepository.findById(levelEntity.getMap().getId());
         DungeonEntitiy newDungeon=new DungeonEntitiy();
-
+        Set<DungeonEntitiy>  dungeonsSS=mapEntity.getDungeons();
         DungeonEntitiy currentDungeon = mapEntity.getCurrentDungeon();
+        List<DungeonEntitiy>  dungeons=dungeonsSS.stream().filter(dungeon->{return dungeon.getId()>currentDungeon.getId();
+        }).collect(Collectors.toList());
+
         if(currentDungeon.getOrdinalNumber()==mapEntity.getNumberOfDungeons()) {
             newDungeon.setId(0);
             return gameDtoTransformer.toDto(gameEntitiy);
         }
         else  {
-            newDungeon=dungeonRepository.findById(currentDungeon.getId() + 1);
+        int pomId=dungeons.get(0).getId();
+        for(DungeonEntitiy dungeon:dungeons){
+            if(dungeon.getId()<pomId)
+                pomId=dungeon.getId();
+        }
+      //  newDungeon=dungeonRepository.findById(currentDungeon.getId() + 1);
+        newDungeon=dungeonRepository.findById(pomId);
         mapEntity.setCurrentDungeon(newDungeon);
+        mapRepository.persist(mapEntity);
         mapRepository.flush();
         }
 
@@ -126,6 +137,8 @@ public class GameSerivceImpl implements GameSerivce {
         PlayerEntity playerEntity = playerRepository.findBy(gameEntitiy.getPlayer().getId());
         int playerHealth = playerEntity.getHealth();
 
+
+
         MonsterEntity monsterEntity = monsterRepository.findById(dungeonEntitiy.getMonster().getId());
         if (monsterEntity != null)
             monsterHealth = monsterEntity.getHealth();
@@ -154,13 +167,26 @@ public class GameSerivceImpl implements GameSerivce {
         MapEntity mapEntity = mapRepository.findById(levelEntity.getMap().getId());
         DungeonEntitiy newDungeon=new DungeonEntitiy();
         DungeonEntitiy currentDungeon = mapEntity.getCurrentDungeon();
+
+
+        Set<DungeonEntitiy>  dungeonsSS=mapEntity.getDungeons();
+        List<DungeonEntitiy>  dungeons=dungeonsSS.stream().filter(dungeon->{return dungeon.getId()>currentDungeon.getId();
+        }).collect(Collectors.toList());
+
         if(currentDungeon.getOrdinalNumber()==mapEntity.getNumberOfDungeons()) {
             newDungeon.setId(0);
             return gameDtoTransformer.toDto(gameEntitiy);
         }
         else  {
-            newDungeon=dungeonRepository.findById(currentDungeon.getId() + 1);
+            int pomId=dungeons.get(0).getId();
+            for(DungeonEntitiy dungeon:dungeons){
+                if(dungeon.getId()<pomId)
+                    pomId=dungeon.getId();
+            }
+            //  newDungeon=dungeonRepository.findById(currentDungeon.getId() + 1);
+            newDungeon=dungeonRepository.findById(pomId);
             mapEntity.setCurrentDungeon(newDungeon);
+            mapRepository.persist(mapEntity);
             mapRepository.flush();
         }
         final int playerHeal = playerEntity.getHealth();
@@ -197,7 +223,8 @@ public class GameSerivceImpl implements GameSerivce {
         int i = 0;
         for (DungeonEntitiy dungeonEntitiy : dungeons) {
             if (item == 0 && i == 0) item = 1;
-            if (i == item) dungeonEntitiy.setItem(itemRepository.findBy(qoq.getId()));
+           // if (i == item) dungeonEntitiy.setItem(itemRepository.findBy(qoq.getId()));
+            if (dungeonEntitiy.getMonster()!=null) dungeonEntitiy.setItem(itemRepository.findBy(qoq.getId()));
             i++;
         }
     }
@@ -210,6 +237,7 @@ public class GameSerivceImpl implements GameSerivce {
             if (item == 0 && i == 0)
                 item = 1;
             if (i == item) dungeonEntitiy.setMonster(monsterRepository.findBy(monster.getId()));
+            //if (i == size-1) dungeonEntitiy.setMonster(monsterRepository.findBy(monster.getId()));
             i++;
         }
     }
@@ -221,7 +249,7 @@ public class GameSerivceImpl implements GameSerivce {
             monsterEntity.setDamage(5);
         } else if (weightFacotr.equals(WeightFacotr.MEDIUM)) {
             monsterEntity.setDamage(10);
-        } else monsterEntity.setDamage(15);
+        } else monsterEntity.setDamage(20);
         monsterRepository.persist(monsterEntity);
         return monsterEntity;
     }

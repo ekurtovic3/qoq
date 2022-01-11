@@ -6,6 +6,7 @@ public class MapDto {
     private Integer id;
     private List<DungeonDto> dungeons;
     private DungeonDto currentDungeon;
+    private Integer numberOfDungeons;
     public Integer getId() {
         return id;
     }
@@ -24,6 +25,14 @@ public class MapDto {
 
     public DungeonDto getCurrentDungeon() {
         return currentDungeon;
+    }
+
+    public Integer getNumberOfDungeons() {
+        return numberOfDungeons;
+    }
+
+    public void setNumberOfDungeons(Integer numberOfDungeons) {
+        this.numberOfDungeons = numberOfDungeons;
     }
 
     public void setCurrentDungeon(DungeonDto currentDungeon) {

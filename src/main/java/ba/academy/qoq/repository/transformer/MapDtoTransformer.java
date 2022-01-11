@@ -20,6 +20,7 @@ public class MapDtoTransformer implements DtoTransformer<MapEntity, MapDto> {
         final Set<DungeonEntitiy> dungeons = entity.getDungeons();
         mapInput.setDungeons(dungeonDtoTransformer.toDtoList(dungeons));
        if(entity.getCurrentDungeon()!=null) mapInput.setCurrentDungeon(dungeonDtoTransformer.toDto(entity.getCurrentDungeon()));
+       mapInput.setNumberOfDungeons(entity.getNumberOfDungeons());
         return  mapInput;
     }
     @Override
